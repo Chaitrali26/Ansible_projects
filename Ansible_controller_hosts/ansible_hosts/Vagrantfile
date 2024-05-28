@@ -1,0 +1,18 @@
+#ansible host vagrant file
+Vagrant.configure("2") do |config|
+  config.vm.box = "centos/7"
+  
+  config.vm.define "web" do |web|
+    web.vm.hostname = "web"
+    web.vm.network "private_network", ip: "192.168.33.10" #do not need to define
+  end
+  
+  config.vm.define "db" do |db|
+    db.vm.hostname = "db"
+    db.vm.network "private_network", ip: "192.168.33.11"
+  end
+  # we are doing port forwarding in the below command. this means that we are mapping port 80 of the VM to port 8080 of our host machine i.e our local machine.
+  config.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
+  # if port "8080" is busy by some other apps, we can use other ports in below range.
+  config.vm.usable_port_range = (8000..9000)
+end
